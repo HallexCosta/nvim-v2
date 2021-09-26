@@ -17,6 +17,7 @@ if has("nvim")
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
   Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'hoob3rt/lualine.nvim'
 endif
 
 call plug#end()
