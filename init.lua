@@ -1,4 +1,4 @@
--- Aliases Vim API
+-- Aliases Vim API {{{
 cmd = vim.cmd  -- to execute Vim commands e.g. cmd('pwd')
 api = vim.api  -- to call Vim API e.g. api.nvim_command [[augroup Format]]
 fn = vim.fn    -- to call Vim functions e.g. fn.bufnr()
@@ -10,25 +10,27 @@ exists = fn.exists
 has = fn.has
 cmd = api.nvim_command
 runtime = vim.runtime
+--}}}
 
--- Fundamentals --[[
----------------------------------------------------------------------
+-- Fundamentals {{{
 -- init autocmd
 cmd [[ autocmd! ]]
 -- set script encoding
---cmd [[set scriptencoding utf-8]]
+-- cmd [[ set scriptencoding utf-8 ]]
 -- stop loading config if it's on tiny or small
-cmd [[if !1 | finish | end]]
+if not 1 then
+  return
+end
 
-cmd [[set nocompatible ]]
+opt.compatible = false
 opt.number = true
-cmd [[syntax enable]]
-opt.fileencodings = 'utf-8,sjis,euc-jp,latin'
+cmd [[ syntax enable ]]
+opt.fileencodings = {'utf-8', 'sjis', 'euc-jp', 'latin'}
 opt.encoding = 'utf-8'
 opt.title = true
 opt.autoindent = true
 opt.background = 'dark'
-cmd [[ set nobackup ]]
+opt.backup = false
 opt.hlsearch = true
 opt.showcmd = true
 opt.cmdheight = 1
@@ -38,7 +40,7 @@ opt.expandtab = true
 
 -- let loaded_matchparen = 1
 opt.shell = 'fish'
-opt.backupskip = '/tmp/*,/private/tmp/*'
+opt.backupskip = {'/tmp/*', '/private/tmp/*'}
 
 -- incremental substitution (neovim)
 if has('nvim') then
@@ -48,7 +50,9 @@ end
 -- Suppress appending <PasteStart> and <PasteEnd> when pasting
 cmd [[ set t_BE= ]]
 
-cmd [[ set nosc noru nosm ]]
+opt.sc = false
+opt.ru = false
+opt.sm = false
 
 -- Do not redraw while executing macros (good performance config)
 opt.lazyredraw = true
@@ -63,14 +67,12 @@ opt.ignorecase = true
 opt.smarttab = true
 
 -- indents
-cmd [[ filetype plugin indent on ]]
-opt.shiftwidth = 2
 opt.tabstop = 2
 
 opt.ai = true -- Auto indent
 opt.si = true -- Smart indent
-cmd [[ set nowrap ]]-- No Wrap lines
-opt.backspace='start,eol,indent'
+opt.wrap = false -- No Wrap lines
+opt.backspace = {'start', 'eol', 'indent'}
 
 -- Finding files - Search down into subfolders
 opt.path:append('**')
@@ -82,11 +84,9 @@ cmd [[ autocmd InsertLeave * set nopaste ]]
 -- Add asterisks in block comments
 -- vim.inspect(vim.opt.formatoptions:get()) -- show formatoptions
 opt.formatoptions:append('r')
---]]
+--}}}
 
--- Highlights --[[
----------------------------------------------------------------------
-
+-- Highlights {{{
 opt.cursorline = true
 -- opt.cursorcolumn = true
 
@@ -96,6 +96,7 @@ cmd [[ highlight Visual cterm=NONE ctermbg=236 ctermfg=NONE guibg=Grey40 ]]
 cmd [[ highlight LineNr cterm=none ctermfg=240 guifg=#2b506e guibg=#000000 ]]
 
 cmd [[ augroup BgHighlight ]]
+
 cmd [[ autocmd! ]]
 cmd [[ autocmd WinEnter * set cul ]]
 cmd [[ autocmd WinLeave * set nocul ]]
@@ -113,9 +114,9 @@ if term ~= 'screen' then
   ]]
 end
 
---]]
+--}}}
 
--- File types --[[
+-- File types {{{
 ---------------------------------------------------------------------
 -- JavaScript
 cmd [[ au BufNewFile,BufRead *.es6 setf javascript ]]
@@ -126,33 +127,33 @@ cmd [[ au BufNewFile,BufRead *.md set filetype=markdown ]]
 -- Flow
 cmd [[ au BufNewFile,BufRead *.flow set filetype=javascript ]]
 
-opt.suffixesadd = '.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md'
+opt.suffixesadd = { '.js', '.es', '.jsx', '.json', '.css', '.less', '.sass,.styl', '.php', '.py', '.md'}
 
 cmd [[ autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 ]]
 cmd [[ autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 ]]
 cmd [[ autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 ]]
---]]
+--}}}
 
--- Imports --[[
----------------------------------------------------------------------
+-- Imports {{{
+-- load plugs
+-- local ok, _ = pcall(require, 'plug')
 require('plug')
+
+-- if (ok) then print("Plugins loaded") end
 
 if has('unix') then
   local uname = fn.system("uname -s") 
 
   -- Do Mac stuff
   if uname == 'Darwin\n' then
-    cmd [[runtime ./macos.vim]]
-    print("Estamos em um Mac :/")
+    cmd [[ runtime ./macos.vim ]]
   end
 end
 
-cmd [[runtime ./maps.vim]]
---]]
+cmd [[ runtime ./maps.vim ]]
+--}}}
 
--- Syntax theme --[[
----------------------------------------------------------------------
-
+-- Syntax theme {{{
 -- true color
 -- Syntax theme (true color)
 if exists("&termguicolors") and exists("&winblend") then
@@ -165,13 +166,13 @@ if exists("&termguicolors") and exists("&winblend") then
   
   -- Use NeoSolarized
   g.neosolarized_termtrans = 1
-  cmd [[runtime ./colors/NeoSolarized.vim]]
-  cmd [[colorscheme NeoSolarized]]
+  cmd [[ runtime ./colors/NeoSolarized.vim]]
+  cmd 'colorscheme NeoSolarized'
 end
----------------------------------
+--}}}
 
--- Extras
+-- Extras {{{
 opt.exrc = true
---]]
+--}}}
 
 -- vim: set foldmethod=marker foldlevel=0:
