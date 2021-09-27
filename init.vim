@@ -1,149 +1,194 @@
+lua <<EOF
+  -- Aliases Vim API
+  cmd = vim.cmd  -- to execute Vim commands e.g. cmd('pwd')
+  api = vim.api  -- to call Vim API e.g. api.nvim_command [[augroup Format]]
+  fn = vim.fn    -- to call Vim functions e.g. fn.bufnr()
+  g = vim.g      -- a table to access global variables
+  s = vim.s      -- a table to access global variables
+  opt = vim.opt  -- to set options
+
+  exists = fn.exists
+  has = fn.has
+  cmd = api.nvim_command
+  runtime = vim.runtime
+EOF
+
 " Fundamentals "{{{
 " ---------------------------------------------------------------------
 
-" init autocmd
-autocmd!
-" set script encoding
-scriptencoding utf-8
-" stop loading config if it's on tiny or small
-if !1 | finish | endif
 
-set nocompatible
-set number
-syntax enable
-set fileencodings=utf-8,sjis,euc-jp,latin
-set encoding=utf-8
-set title
-set autoindent
-set background=dark
-set nobackup
-set hlsearch
-set showcmd
-set cmdheight=1
-set laststatus=2
-set scrolloff=10
-set expandtab
-"let loaded_matchparen = 1
-set shell=fish
-set backupskip=/tmp/*,/private/tmp/*
+lua <<EOF
+  -- init autocmd
+  cmd [[ autocmd! ]]
+  -- set script encoding
+  --cmd [[set scriptencoding utf-8]]
+  -- stop loading config if it's on tiny or small
+  cmd [[if !1 | finish | end]]
 
-" incremental substitution (neovim)
-if has('nvim')
-  set inccommand=split
-endif
+  cmd [[set nocompatible ]]
+  opt.number = true
+  cmd [[syntax enable]]
+  opt.fileencodings = 'utf-8,sjis,euc-jp,latin'
+  opt.encoding = 'utf-8'
+  opt.title = true
+  opt.autoindent = true
+  opt.background = 'dark'
+  cmd [[ set nobackup ]]
+  opt.hlsearch = true
+  opt.showcmd = true
+  opt.cmdheight = 1
+  opt.laststatus = 2
+  opt.scrolloff = 10
+  opt.expandtab = true
 
-" Suppress appending <PasteStart> and <PasteEnd> when pasting
-set t_BE=
+  -- let loaded_matchparen = 1
+  opt.shell = 'fish'
+  opt.backupskip = '/tmp/*,/private/tmp/*'
 
-set nosc noru nosm
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
-"set showmatch
-" How many tenths of a second to blink when matching brackets
-"set mat=2
-" Ignore case when searching
-set ignorecase
-" Be smart when using tabs ;)
-set smarttab
-" indents
-filetype plugin indent on
-set shiftwidth=2
-set tabstop=2
-set ai "Auto indent
-set si "Smart indent
-set nowrap "No Wrap lines
-set backspace=start,eol,indent
-" Finding files - Search down into subfolders
-set path+=**
-set wildignore+=*/node_modules/*
+  -- incremental substitution (neovim)
+  if has('nvim') then
+    opt.inccommand = 'split'
+  end
 
-" Turn off paste mode when leaving insert
-autocmd InsertLeave * set nopaste
+  -- Suppress appending <PasteStart> and <PasteEnd> when pasting
+  cmd [[ set t_BE= ]]
 
-" Add asterisks in block comments
-set formatoptions+=r
+  cmd [[ set nosc noru nosm ]]
+
+  -- Do not redraw while executing macros (good performance config)
+  opt.lazyredraw = true
+  -- set showmatch
+
+  -- How many tenths of a second to blink when matching brackets
+  -- opt.mat = 2
+
+  -- Ignore case when searching
+  opt.ignorecase = true
+  -- Be smart when using tabs ;)
+  opt.smarttab = true
+
+  -- indents
+  cmd [[ filetype plugin indent on ]]
+  opt.shiftwidth = 2
+  opt.tabstop = 2
+
+  opt.ai = true -- Auto indent
+  opt.si = true -- Smart indent
+  cmd [[ set nowrap ]]-- No Wrap lines
+  opt.backspace='start,eol,indent'
+
+  -- Finding files - Search down into subfolders
+  opt.path:append('**')
+  opt.wildignore:append('*/node_modules/*')
+
+	-- Turn off paste mode when leaving insert
+  cmd [[ autocmd InsertLeave * set nopaste ]]
+  
+-- Add asterisks in block comments
+  -- vim.inspect(vim.opt.formatoptions:get()) -- show formatoptions
+  opt.formatoptions:append('r')
+EOF
 
 "}}}
 
 " Highlights "{{{
 " ---------------------------------------------------------------------
-set cursorline
-"set cursorcolumn
 
-" Set cursor line color on visual mode
-highlight Visual cterm=NONE ctermbg=236 ctermfg=NONE guibg=Grey40
+lua <<EOF
+  opt.cursorline = true
+  -- opt.cursorcolumn = true
+  
+  -- Set cursor line color on visual mode
+  cmd [[ highlight Visual cterm=NONE ctermbg=236 ctermfg=NONE guibg=Grey40 ]]
 
-highlight LineNr cterm=none ctermfg=240 guifg=#2b506e guibg=#000000
+  cmd [[ highlight LineNr cterm=none ctermfg=240 guifg=#2b506e guibg=#000000 ]]
 
-augroup BgHighlight
-  autocmd!
-  autocmd WinEnter * set cul
-  autocmd WinLeave * set nocul
-augroup END
+  cmd [[ augroup BgHighlight ]]
+  cmd [[ autocmd! ]]
+  cmd [[ autocmd WinEnter * set cul ]]
+  cmd [[ autocmd WinLeave * set nocul ]]
 
-if &term =~ "screen"
-  autocmd BufEnter * if bufname("") !~ "^?[A-Za-z0-9?]*://" | silent! exe '!echo -n "\ek[`hostname`:`basename $PWD`/`basename %`]\e\\"' | endif
-  autocmd VimLeave * silent!  exe '!echo -n "\ek[`hostname`:`basename $PWD`]\e\\"'
-endif
+  cmd [[ augroup END ]]
+
+  local term = os.getenv('TERM')
+
+  if term ~= 'screen' then
+    cmd [[
+      autocmd bufenter * if bufname("") !~ "^?[a-za-z0-9?]*://" | silent! exe '!echo -n "\ek[`hostname`:`basename $pwd`/`basename %`]\e\\"' | endif
+    ]]
+    cmd [[
+      autocmd vimleave * silent!  exe '!echo -n "\ek[`hostname`:`basename $pwd`]\e\\"'
+    ]]
+  end
+EOF
 
 "}}}
 
 " File types "{{{
 " ---------------------------------------------------------------------
-" JavaScript
-au BufNewFile,BufRead *.es6 setf javascript
-" TypeScript
-au BufNewFile,BufRead *.tsx setf typescriptreact
-" Markdown
-au BufNewFile,BufRead *.md set filetype=markdown
-" Flow
-au BufNewFile,BufRead *.flow set filetype=javascript
+lua <<EOF
+  -- JavaScript
+  cmd [[au BufNewFile,BufRead *.es6 setf javascript]]
+  -- TypeScript
+  cmd [[au BufNewFile,BufRead *.tsx setf typescriptreact]]
+  -- Markdown
+  cmd [[au BufNewFile,BufRead *.md set filetype=markdown]]
+  -- Flow
+  cmd [[au BufNewFile,BufRead *.flow set filetype=javascript]]
 
-set suffixesadd=.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md
+  opt.suffixesadd = '.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md'
 
-autocmd FileType coffee setlocal shiftwidth=2 tabstop=2
-autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
-autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+  cmd [[autocmd FileType coffee setlocal shiftwidth=2 tabstop=2]]
+  cmd [[autocmd FileType ruby setlocal shiftwidth=2 tabstop=2]]
+  cmd [[autocmd FileType yaml setlocal shiftwidth=2 tabstop=2]]
+EOF
 
 "}}}
 
 " Imports "{{{
 " ---------------------------------------------------------------------
-runtime ./plug.vim
-if has("unix")
-  let s:uname = system("uname -s")
-  " Do Mac stuff
-  if s:uname == "Darwin\n"
-    runtime ./macos.vim
-  endif
-endif
+lua <<EOF
+  require('plug')
 
-runtime ./maps.vim
+  if has('unix') then
+    local uname = fn.system("uname -s") 
+
+    -- Do Mac stuff
+    if uname == 'Darwin\n' then
+      cmd [[runtime ./macos.vim]]
+      print("Estamos em um Mac :/")
+    end
+  end
+
+  cmd [[runtime ./maps.vim]]
+EOF
 "}}}
 
 " Syntax theme "{{{
 " ---------------------------------------------------------------------
 
 " true color
-if exists("&termguicolors") && exists("&winblend")
-  syntax enable
-  set termguicolors
-  set winblend=0
-  set wildoptions=pum
-  set pumblend=5
-  set background=dark
-  " Use NeoSolarized
-  let g:neosolarized_termtrans=1
-  runtime ./colors/NeoSolarized.vim
-  colorscheme NeoSolarized
-endif
+lua <<EOF
+  -- Syntax theme (true color)
+  if exists("&termguicolors") and exists("&winblend") then
+    opt.syntax = 'enable'
+    opt.termguicolors = true
+    opt.winblend = 0
+    opt.wildoptions = 'pum'
+    opt.pumblend = 5
+    opt.background='dark'
+    
+    -- Use NeoSolarized
+    g.neosolarized_termtrans = 1
+    cmd [[runtime ./colors/NeoSolarized.vim]]
+    cmd [[colorscheme NeoSolarized]]
+  end
+  ---------------------------------
 
-"}}}
-
-" Extras "{{{
-" ---------------------------------------------------------------------
-set exrc
+  -- Extras
+  opt.exrc = true
+EOF
 "}}}
 
 " vim: set foldmethod=marker foldlevel=0:
-lua require("plug")
+" lua require("plug")
