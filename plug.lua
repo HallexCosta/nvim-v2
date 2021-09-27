@@ -1,9 +1,9 @@
-local fn = vim.fn
-local call = vim.call
+fn = vim.fn
+call = vim.call
+has = fn.has
 
-local Plug = fn['plug#']
-local stdpath = fn.stdpath
-local has = fn.has
+Plug = fn['plug#']
+stdpath = fn.stdpath
 
 local plug_home
 
