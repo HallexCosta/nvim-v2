@@ -127,7 +127,7 @@ cmd [[ au BufNewFile,BufRead *.md set filetype=markdown ]]
 -- Flow
 cmd [[ au BufNewFile,BufRead *.flow set filetype=javascript ]]
 
-opt.suffixesadd = { '.js', '.es', '.jsx', '.json', '.css', '.less', '.sass,.styl', '.php', '.py', '.md'}
+opt.suffixesadd = { '.js', '.es', '.jsx', '.json', '.css', '.less', '.sass', '.styl', '.php', '.py', '.md'}
 
 cmd [[ autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 ]]
 cmd [[ autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 ]]
