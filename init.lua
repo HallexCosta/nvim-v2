@@ -136,10 +136,7 @@ cmd [[ autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 ]]
 
 -- Imports {{{
 -- load plugs
--- local ok, _ = pcall(require, 'plug')
-require('plug')
-
--- if (ok) then print("Plugins loaded") end
+cmd [[ runtime ./plug.lua ]]
 
 if has('unix') then
   local uname = fn.system("uname -s") 
@@ -153,9 +150,7 @@ end
 cmd [[ runtime ./maps.vim ]]
 --}}}
 
--- Syntax theme {{{
--- true color
--- Syntax theme (true color)
+-- Syntax theme (true color) {{{
 if exists("&termguicolors") and exists("&winblend") then
   opt.syntax = 'enable'
   opt.termguicolors = true
