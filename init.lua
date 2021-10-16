@@ -67,7 +67,9 @@ opt.ignorecase = true
 opt.smarttab = true
 
 -- indents
-opt.tabstop = 2
+opt.tabstop = 4 
+opt.shiftwidth = 2
+opt.softtabstop= 0 
 
 opt.ai = true -- Auto indent
 opt.si = true -- Smart indent
@@ -129,9 +131,9 @@ cmd [[ au BufNewFile,BufRead *.flow set filetype=javascript ]]
 
 opt.suffixesadd = { '.js', '.es', '.jsx', '.json', '.css', '.less', '.sass', '.styl', '.php', '.py', '.md'}
 
-cmd [[ autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 ]]
-cmd [[ autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 ]]
-cmd [[ autocmd FileType yaml setlocal shiftwidth=2 tabstop=2 ]]
+cmd [[ autocmd FileType coffee setlocal shiftwidth=2 tabstop=4 ]]
+cmd [[ autocmd FileType ruby setlocal shiftwidth=2 tabstop=4 ]]
+cmd [[ autocmd FileType yaml setlocal shiftwidth=2 tabstop=4 ]]
 --}}}
 
 -- Imports {{{
