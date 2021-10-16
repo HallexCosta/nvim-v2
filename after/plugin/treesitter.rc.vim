@@ -8,11 +8,11 @@ require 'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {}
   },
-  ident = {
+  indent = {
     enable = false,
     disable = {}
   },
-  indent = {
+  ensure_installed = {
     "tsx",
     "toml",
     "fish",
