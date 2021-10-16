@@ -134,6 +134,7 @@ opt.suffixesadd = { '.js', '.es', '.jsx', '.json', '.css', '.less', '.sass', '.s
 cmd [[ autocmd FileType coffee setlocal shiftwidth=2 tabstop=4 ]]
 cmd [[ autocmd FileType ruby setlocal shiftwidth=2 tabstop=4 ]]
 cmd [[ autocmd FileType yaml setlocal shiftwidth=2 tabstop=4 ]]
+cmd [[ filetype plugin indent on ]]
 --}}}
 
 -- Imports {{{
