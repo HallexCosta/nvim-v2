@@ -20,7 +20,9 @@ Plug 'cohama/lexima.vim'
 
 if has("nvim") then
   Plug('neovim/nvim-lspconfig')
-  Plug('glepnir/lspsaga.nvim')
+  --Plug('glepnir/lspsaga.nvim')
+  -- use this if have some error in glepnir/lspsaga
+  Plug('tami5/lspsaga.nvim')
   Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'})
   Plug('nvim-lua/completion-nvim')
   Plug('nvim-lua/popup.nvim')
